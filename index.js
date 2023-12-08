@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
     res.send('car doctor server is running')
 })
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xipfv.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -32,6 +32,7 @@ async function run() {
 
 
         const serviceCollection = client.db('car-doctor').collection('services');
+        const bookingsCollection = client.db('car-doctor').collection('bookings');
 
         //  step 1 data all 
         app.get('/services', async (req, res) => {
@@ -40,7 +41,27 @@ async function run() {
             res.send(result)
         })
 
+        // step 2 one data
 
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const options = {
+                projection: { title: 1, price: 1, services_id: 1 }
+            }
+            const result = await serviceCollection.findOne(query, options);
+            res.send(result)
+        })
+
+
+        // order 3
+
+        app.post('/bookings', async (req, res) => {
+            const booking = req.body;
+            console.log(booking)
+            const result = await bookingsCollection.insertOne(booking);
+            res.send(result)
+        })
 
 
         // Send a ping to confirm a successful connection
