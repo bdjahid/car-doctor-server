@@ -31,6 +31,14 @@ async function run() {
         await client.connect();
 
 
+        const serviceCollection = client.db('car-doctor').collection('services');
+
+        //  step 1 data all 
+        app.get('/services', async (req, res) => {
+            const cursor = serviceCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+        })
 
 
 
