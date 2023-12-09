@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 require('dotenv').config()
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 // middleware
 app.use(cors());
@@ -56,6 +56,7 @@ async function run() {
 
         // order 
         // step 4
+
         app.get('/bookings', async (req, res) => {
             console.log(req.query.email);
             let query = {};
@@ -73,8 +74,29 @@ async function run() {
             const result = await bookingsCollection.deleteOne(query)
             res.send(result)
         })
+
+
+        // put 6 step
+        app.patch('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const updatedBooking = req.body;
+            console.log(updatedBooking);
+            const updateDoc = {
+                $set: {
+                    status: updatedBooking.status
+                }
+            }
+
+            const result = await bookingsCollection.updateOne(filter, updateDoc)
+            res.send(result)
+        })
+
+
+
+
         // 4 step
-        app.delete('/bookings/:id', async (req, res) => {
+        app.post('/bookings', async (req, res) => {
             const booking = req.body;
             console.log(booking)
             const result = await bookingsCollection.insertOne(booking);
