@@ -47,15 +47,15 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const options = {
-                projection: { title: 1, price: 1, services_id: 1 }
+                projection: { title: 1, price: 1, services_id: 1, img: 1 }
             }
             const result = await serviceCollection.findOne(query, options);
             res.send(result)
         })
 
 
-        // order 3
-
+        // order 
+        // step 4
         app.get('/bookings', async (req, res) => {
             console.log(req.query.email);
             let query = {};
@@ -66,13 +66,21 @@ async function run() {
             res.send(result)
         })
 
-        // 3
-        app.post('/bookings', async (req, res) => {
+        // 5 step
+        app.delete('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await bookingsCollection.deleteOne(query)
+            res.send(result)
+        })
+        // 4 step
+        app.delete('/bookings/:id', async (req, res) => {
             const booking = req.body;
             console.log(booking)
             const result = await bookingsCollection.insertOne(booking);
             res.send(result)
         })
+
 
 
         // Send a ping to confirm a successful connection
